@@ -1,0 +1,44 @@
+
+#' Installs from Cytoreason-Releases
+install_cytoreason <- function(package, ..., repo = "Cytoreason-Releases"){
+  install_github_package(file.path(repo, package), ...)
+  
+}
+
+#' Installs a package from a GitHub repo with vignettes and ask for token
+install_github_package <- function(..., 
+                                   auth_token = TRUE,
+                                   dependencies = TRUE, 
+                                   build_vignettes = TRUE){
+  
+  .library <- function(package){
+    if( !require(package, character.only = TRUE, quietly = TRUE) ) 
+      install.packages(package)
+    
+  }
+  
+  # install package `remotes` if not already installed
+  .library("remotes")
+  
+  # setup GITHUB_PAT environment variable for authentication (if necessary)
+  if( isTRUE(auth_token) ) auth_token <- Sys.getenv("GITHUB_PAT", unset = NA_character_)
+  else if( isFALSE(auth_token) ) auth_token <- NULL
+  if( !is.null(auth_token) ){
+    if( is.na(auth_token) ){
+      .library("askpass")
+      auth_token <- askpass::askpass("Please enter yout GitHub token:")
+      
+    }
+    if( length(auth_token) ){
+      .library("withr")
+      withr::local_envvar(list(GITHUB_PAT = auth_token))
+      
+    }
+  }
+  
+  # install using package remotes
+  remotes::install_github(..., 
+                          dependencies = dependencies,
+                          build_vignettes = build_vignettes)
+  
+}
