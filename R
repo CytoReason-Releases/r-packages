@@ -1,7 +1,7 @@
 
 #' Installs from Cytoreason-Releases
-install_cytoreason <- function(package, ...){
-  install_github_package(file.path("Cytoreason-Releases", package), ...)
+install_cytoreason <- function(package, ..., repo = "Cytoreason-Releases"){
+  install_github_package(file.path(repo, package), ...)
   
 }
 
