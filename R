@@ -1,4 +1,10 @@
 
+#' Installs from Cytoreason-Releases
+install_cytoreason <- function(package, ...){
+  install_github_package(file.path("Cytoreason-Releases", package), ...)
+  
+}
+
 #' Installs a package from a GitHub repo with vignettes and ask for token
 install_github_package <- function(..., 
                                    auth_token = TRUE,
